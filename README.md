@@ -64,52 +64,48 @@ server/
 └── package.json
 ```
 
-## 🚀 Cómo Ejecutar
+## 🚀 Quick Start (Para Colaboradores)
+
+Sigue estos pasos para levantar el proyecto localmente:
 
 ### Prerequisitos
 
-- Node.js 18+
-- MySQL 8+
-- pnpm
+- [Node.js](https://nodejs.org/) 18+
+- [pnpm](https://pnpm.io/es/installation) (`npm install -g pnpm`)
+- [MySQL](https://dev.mysql.com/downloads/mysql/) 8+
 
-### 1. Configurar Base de Datos
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/tu-usuario/Backend-CorralonERP.git
+cd Backend-CorralonERP
+```
+
+### 2. Instalar Dependencias
+
+```bash
+pnpm install
+```
+
+### 3. Configurar Variables de Entorno
+
+Copia el archivo de ejemplo y edítalo con tus credenciales:
+
+```bash
+cp .env.example .env
+```
+
+Luego abre `.env` y configura las variables de tu base de datos MySQL.
+
+### 4. Configurar Base de Datos
 
 ```sql
 CREATE DATABASE corralon;
 ```
 
-Ejecutar los scripts de migración:
+> **Nota:** Si tienes scripts de migración en la carpeta `scripts/`, ejecútalos para crear las tablas.
 
-```bash
-# Desde la raíz del proyecto
-mysql -u root -p corralon < scripts/001_create_schema_mysql.sql
-mysql -u root -p corralon < scripts/006_add_password_column.sql
-mysql -u root -p corralon < scripts/004_seed_data_mysql.sql  # Opcional: datos de prueba
-```
-
-### 2. Configurar Variables de Entorno
-
-Crear archivo `.env` en la carpeta `server/`:
-
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=root
-DB_PASSWORD=root
-DB_DATABASE=corralon
-
-JWT_SECRET=tu_clave_secreta_aqui
-JWT_EXPIRES_IN=7d
-```
-
-### 3. Instalar Dependencias
-
-```bash
-cd server
-pnpm install
-```
-
-### 4. Ejecutar el Servidor
+### 5. Ejecutar el Servidor
 
 ```bash
 # Desarrollo (con hot-reload)
@@ -123,7 +119,26 @@ pnpm run start:prod
 El servidor estará disponible en:
 
 - **API**: http://localhost:3001
-- **Swagger**: http://localhost:3001/api
+- **Swagger (Documentación)**: http://localhost:3001/api
+
+---
+
+## ☁️ Deploy en Render.com
+
+Este proyecto incluye un archivo `render.yaml` para despliegue automático.
+
+### Pasos:
+
+1. Sube tu repositorio a GitHub.
+2. Ve a [Render Dashboard](https://dashboard.render.com/) y crea un nuevo **Blueprint**.
+3. Conecta tu repositorio de GitHub.
+4. Render detectará automáticamente el archivo `render.yaml`.
+5. Configura las **Environment Variables** (DB_HOST, DB_PASSWORD, etc.) en el panel de Render.
+6. ¡Listo! Tu API estará desplegada.
+
+> **Importante:** Necesitarás una base de datos MySQL accesible desde internet (ej: [PlanetScale](https://planetscale.com/), [Railway MySQL](https://railway.app/), o un servidor propio).
+
+---
 
 ## 📡 API Endpoints
 
