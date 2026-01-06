@@ -1,4 +1,10 @@
 # https://render.com/docs/blueprint-spec
+databases:
+  - name: corralon-db
+    plan: free
+    databaseName: corralon
+    user: corralon_user
+
 services:
   - type: web
     name: corralon-api
@@ -9,15 +15,25 @@ services:
       - key: NODE_ENV
         value: production
       - key: DB_HOST
-        sync: false
+        fromDatabase:
+          name: corralon-db
+          property: host
       - key: DB_PORT
-        sync: false
+        fromDatabase:
+          name: corralon-db
+          property: port
       - key: DB_USERNAME
-        sync: false
+        fromDatabase:
+          name: corralon-db
+          property: user
       - key: DB_PASSWORD
-        sync: false
+        fromDatabase:
+          name: corralon-db
+          property: password
       - key: DB_DATABASE
-        sync: false
+        fromDatabase:
+          name: corralon-db
+          property: database
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL

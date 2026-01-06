@@ -8,7 +8,7 @@ Backend RESTful para el Sistema de Gestión Integral de Corralones de Materiales
 | ------------------- | ------- | ----------------------------------------- |
 | **NestJS**          | 11.x    | Framework backend progresivo para Node.js |
 | **TypeORM**         | 0.3.x   | ORM para TypeScript/JavaScript            |
-| **MySQL**           | 8.x     | Base de datos relacional                  |
+| **PostgreSQL**      | 15+     | Base de datos relacional                  |
 | **Passport JWT**    | 4.x     | Autenticación basada en tokens            |
 | **Swagger**         | 11.x    | Documentación automática de API           |
 | **class-validator** | 0.14.x  | Validación de DTOs                        |
@@ -32,7 +32,7 @@ Backend RESTful para el Sistema de Gestión Integral de Corralones de Materiales
 
 ### Base de Datos
 
-- **Entities**: Modelos de TypeORM que mapean tablas MySQL
+- **Entities**: Modelos de TypeORM que mapean tablas PostgreSQL
 - **Relations**: Relaciones definidas con decoradores (`@ManyToOne`, `@OneToMany`)
 - **UUID Primary Keys**: Identificadores únicos para todas las entidades
 
@@ -72,7 +72,7 @@ Sigue estos pasos para levantar el proyecto localmente:
 
 - [Node.js](https://nodejs.org/) 18+
 - [pnpm](https://pnpm.io/es/installation) (`npm install -g pnpm`)
-- [MySQL](https://dev.mysql.com/downloads/mysql/) 8+
+- [PostgreSQL](https://www.postgresql.org/download/) 15+
 
 ### 1. Clonar el Repositorio
 
@@ -95,15 +95,22 @@ Copia el archivo de ejemplo y edítalo con tus credenciales:
 cp .env.example .env
 ```
 
-Luego abre `.env` y configura las variables de tu base de datos MySQL.
+Luego abre `.env` y configura las variables de tu base de datos PostgreSQL.
 
-### 4. Configurar Base de Datos
+### 4. Configurar Base de Datos PostgreSQL
 
-```sql
-CREATE DATABASE corralon;
+```bash
+# Crear la base de datos
+psql -U postgres -c "CREATE DATABASE corralon;"
+
+# Ejecutar el script de schema
+psql -U postgres -d corralon -f scripts-postgres/001_create_schema.sql
+
+# Ejecutar datos iniciales (opcional)
+psql -U postgres -d corralon -f scripts-postgres/002_seed_data.sql
 ```
 
-> **Nota:** Si tienes scripts de migración en la carpeta `scripts/`, ejecútalos para crear las tablas.
+> **Nota:** Los scripts están en la carpeta `scripts-postgres/`. Si usas MySQL, los scripts están en `scripts/`.
 
 ### 5. Ejecutar el Servidor
 
@@ -125,18 +132,20 @@ El servidor estará disponible en:
 
 ## ☁️ Deploy en Render.com
 
-Este proyecto incluye un archivo `render.yaml` para despliegue automático.
+Este proyecto incluye un archivo `render.yaml` para despliegue automático con **PostgreSQL incluido**.
 
 ### Pasos:
 
 1. Sube tu repositorio a GitHub.
 2. Ve a [Render Dashboard](https://dashboard.render.com/) y crea un nuevo **Blueprint**.
 3. Conecta tu repositorio de GitHub.
-4. Render detectará automáticamente el archivo `render.yaml`.
-5. Configura las **Environment Variables** (DB_HOST, DB_PASSWORD, etc.) en el panel de Render.
+4. Render detectará automáticamente el archivo `render.yaml` y creará:
+   - Una base de datos PostgreSQL gratuita
+   - El servicio web de la API
+5. Configura `JWT_SECRET` y `FRONTEND_URL` en Environment Variables.
 6. ¡Listo! Tu API estará desplegada.
 
-> **Importante:** Necesitarás una base de datos MySQL accesible desde internet (ej: [PlanetScale](https://planetscale.com/), [Railway MySQL](https://railway.app/), o un servidor propio).
+> **Importante:** Después del deploy, debes ejecutar los scripts SQL para crear las tablas. Puedes hacerlo conectándote a la base de datos desde la consola de Render o usando una herramienta como [pgAdmin](https://www.pgadmin.org/).
 
 ---
 
